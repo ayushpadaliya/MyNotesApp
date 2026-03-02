@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotesApp">
         <activity
+            android:name=".view.AddEditNotesActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.ViewNotesActivity"
             android:exported="true">
             <intent-filter>

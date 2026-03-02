@@ -8,14 +8,30 @@ import com.example.notesapp.databinding.LayoutNoteItemBinding
 import com.example.notesapp.model.Notes
 
 class ViewNotesAdapter(
-    val context : Context,
-    val list : List<Notes>
-    ): RecyclerView.Adapter<ViewNotesAdapter.ViewHolderNotes>() {
+    val context: Context,
+    var list: List<Notes>
+) : RecyclerView.Adapter<ViewNotesAdapter.ViewHolderNotes>() {
+
+    lateinit var clickNote: ClickNote
+
+    fun updateData(notesList: MutableList<Notes>) {
+        this.list = notesList
+        notifyDataSetChanged()
+    }
+
+    interface ClickNote {
+        fun onClickNote(notes: Notes)
+    }
+
+    fun setUpClickOfNotes(clickNote: ClickNote) {
+        this.clickNote = clickNote
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolderNotes {
-        val b  = LayoutNoteItemBinding.inflate(
+        val b = LayoutNoteItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -27,15 +43,19 @@ class ViewNotesAdapter(
         holder: ViewHolderNotes,
         position: Int
     ) {
+        holder.b.tvNotesHeader.text = list[position].title
 
+        holder.b.cvParentView.setOnClickListener {
+            clickNote.onClickNote(list[position])
+        }
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return list.size
     }
 
 
-    class ViewHolderNotes(val b: LayoutNoteItemBinding): RecyclerView.ViewHolder(
+    class ViewHolderNotes(val b: LayoutNoteItemBinding) : RecyclerView.ViewHolder(
         b.root
     )
 }
